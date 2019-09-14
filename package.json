@@ -1,0 +1,25 @@
+{
+  "name": "canvas-gui",
+  "version": "0.1.0",
+  "description": "A generic set of tools for creating GUI's via canvas like methods",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Saabstory88/canvas-gui.git"
+  },
+  "keywords": [
+    "NodeJS",
+    "Canvas",
+    "HTML",
+    "SDL"
+  ],
+  "author": "Peter Milo",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Saabstory88/canvas-gui/issues"
+  },
+  "homepage": "https://github.com/Saabstory88/canvas-gui#readme"
+}
