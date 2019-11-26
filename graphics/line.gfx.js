@@ -1,38 +1,28 @@
 const Drawable = require('./drawable.gfx.js');
 
+/*
+  Geometry object for a line
+
+  geometry = {
+    x: 0,
+    y: 0,
+    x1: 1,
+    y1: 1
+  }
+
+*/
+
 class Line extends Drawable {
   constructor(ctx, options){
     super(ctx, options);
-
-    // ex = Endpoint X  ey = Endpoint Y
-    this.ex = 1;
-    this.ey = 0;
-  }
-
-  dims(dims){
-    super.dims(dims);
-    // Define endpoint explicitly
-    if(typeof(dims.ex) != 'undefined'){
-      this.ex = dims.ex;
-    }
-    if(typeof(dims.ey) != 'undefined'){
-      this.ey = dims.ey;
-    }
-    // Define endpoint by offset
-    if(typeof(dims.dx) != 'undefined'){
-      this.ex = this.x + dims.dx;
-    }
-    if(typeof(dims.dy) != 'undefined'){
-      this.ey = this.y + dims.dy;
-    }
   }
 
   draw(){
-    super.draw();
-    // Use LineTo Mode
-    this.ctx.lineTo(this.ex, this.ey);
-    // Stroke only, no fill
-    this.ctx.stroke();
+    if(this.visible){
+      super.draw();
+      this.ctx.lineTo(this.geometry.x1 + this.root.x, this.geometry.y1 + this.root.y);
+      this.ctx.stroke();
+    }
   }
 }
 

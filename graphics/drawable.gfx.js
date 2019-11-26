@@ -1,50 +1,71 @@
-// General purpose class for drawable objects
+/* General purpose class for drawable objects
+
+  This original system does not allow for the properties of drawable objects to
+  easily be swapped. Ultimately, this library is meant for creating user
+  interfaces, so having easily switchable states is important.
+
+  Additionally, geometry data needs to be made more generic
+
+*/
 
 class Drawable {
   constructor(ctx, options){
     this.ctx = ctx;
 
-    // Always record a base position
-    this.x = 0;
-    this.y = 0;
+    // This default will contain all of the possible style properties
+    this.style = {
+      fillStyle: '#000000',
+      strokeStyle: '#FFFFFF',
+      weight: '1px'
+    }
+    // This object will hold all of the possible styles
+    this.styles = { default: this.style };
 
-    // Record optionsdata if passed
+    // We are going to make geometry an object in itself
+    this.geometry = {
+      x: 0,
+      y: 0
+    }
+
+    // We assign a root object for positioning
+    this.root = {
+      x: 0,
+      y: 0
+    }
+
+    // Visibility, defaults to true
+    this.visible = true;
+
+    // Load the basic data about the object
     if(typeof(options) != 'undefined'){
-      this.options = options;
+      if(typeof(options.styles != 'undefined')){
+        this.styles = options.styles;
+      }
+      if(typeof(options.geometry) != 'undefined'){
+        this.geometry = options.geometry;
+      }
+      if(typeof(options.root) != 'undefined'){
+        this.root = options.root;
+      }
     }
   }
 
-  // This method can be extended to allow for endpoints, radii, and misc.
-  dims(dimensions){
-    this.x = dimensions.x;
-    this.y = dimensions.y;
+  // Sets style by key
+  setStyle(style){
+    this.style = this.styles[style];
   }
 
-  // Style will be passed as an object
-  style(style){
-    if(typeof(style.fill) != 'undefined'){
-      this.fillStyle = style.fill;
-    }
-    if(typeof(style.stroke) != 'undefined'){
-      this.strokeStyle = style.stroke;
-    }
-    if(typeof(style.weight) != 'undefined'){
-      this.weight = style.weight;
-    }
+  // Useful for getting the prototypical geometry for this type
+  getGeometry(){
+    return JSON.parse(JSON.stringify(this.geometry))
   }
 
   // The parent class method should always be called
-  draw(){
-    if(typeof(this.fillStyle) != 'undefined'){
-      this.ctx.fillStyle = this.fillStyle;
-    }
-    if(typeof(this.strokeStyle) != 'undefined'){
-      this.ctx.strokeStyle = this.strokeStyle;
-    }
-    if(typeof(this.weight) != 'undefined'){
-      this.ctx.lineWidth = this.weight;
-    }
-    this.ctx.moveTo(this.x, this.y);
+  draw(callback){
+    this.ctx.fillStyle = this.style.fillStyle;
+    this.ctx.strokeStyle = this.style.strokeStyle;
+    this.ctx.lineWidth = this.style.weight;
+    this.ctx.moveTo(this.geometry.x + this.root.x, this.geometry.y + this.root.y);
   }
 }
 
