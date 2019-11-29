@@ -61,7 +61,7 @@ class Drawable {
   }
 
   // The parent class method should always be called
-  draw(callback){
+  draw(){
     this.ctx.fillStyle = this.style.fillStyle;
     this.ctx.strokeStyle = this.style.strokeStyle;
     this.ctx.lineWidth = this.style.weight;

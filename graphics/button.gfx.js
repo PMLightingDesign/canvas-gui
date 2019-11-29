@@ -15,9 +15,10 @@ class Button extends Rectangle {
   }
 
   test(pos){
-    if(pos.x > this.x && pos.x < this.x1){
-      if(pos.y > this.y && pos.y < this.y1){
-        if(this.enabled){
+    let buttonPos = this.getCurrentGeometry();
+    if(pos.x > buttonPos.x && pos.x < buttonPos.x1){
+      if(pos.y > buttonPos.y && pos.y < buttonPos.y1){
+        if(this.enabled && this.visible){
           this.callback(this);
         }
       }
@@ -26,11 +27,12 @@ class Button extends Rectangle {
 
   draw(){
     super.draw();
-    let cx = this.x + 8;
-    let cy = this.y + ((this.y1-this.y) / 2);
+    let cx = this.geometry.x + this.root.x + (this.geometry.height / 2);
+    let cy = this.geometry.y + this.root.y + (this.geometry.height / 2);
     this.ctx.moveTo(cx, cy);
     this.ctx.fillStyle = '#fff';
     this.ctx.fillText(this.text, cx, cy);
+    console.log(this);
   }
 }
 
