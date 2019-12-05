@@ -3,6 +3,7 @@ const Rectangle = require('./rect.gfx.js');
 class Button extends Rectangle {
   constructor(ctx, callback, options){
     super(ctx, options);
+    this.type = "button";
     this.callback = callback;
     this.enabled = true;
 
@@ -27,12 +28,15 @@ class Button extends Rectangle {
 
   draw(){
     super.draw();
-    let cx = this.geometry.x + this.root.x + (this.geometry.height / 2);
-    let cy = this.geometry.y + this.root.y + (this.geometry.height / 2);
-    this.ctx.moveTo(cx, cy);
-    this.ctx.fillStyle = '#fff';
-    this.ctx.fillText(this.text, cx, cy);
-    console.log(this);
+    this.drawChildren();
+    if(this.text != ''){
+      let cx = this.geometry.x + this.root.x + (this.geometry.height / 2);
+      let cy = this.geometry.y + this.root.y + (this.geometry.height / 2) + 5;
+      this.ctx.moveTo(cx, cy);
+      this.ctx.textAlign = "center"
+      this.ctx.fillStyle = '#fff';
+      this.ctx.fillText(this.text, cx, cy);
+    }
   }
 }
 

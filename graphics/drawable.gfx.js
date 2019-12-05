@@ -10,6 +10,7 @@
 
 class Drawable {
   constructor(ctx, options){
+    this.type = "drawable";
     this.ctx = ctx;
 
     // This default will contain all of the possible style properties
@@ -36,10 +37,21 @@ class Drawable {
     // Visibility, defaults to true
     this.visible = true;
 
+    // Allow for child objects
+    this.children = [];
+
     // Load the basic data about the object
     if(typeof(options) != 'undefined'){
-      if(typeof(options.styles != 'undefined')){
+      if(typeof(options.styles) != 'undefined'){
         this.styles = options.styles;
+      } else {
+        this.styles = {
+          default: {
+            fillStyle: '#000000',
+            strokeStyle: '#FFFFFF',
+            weight: '1px'
+          }
+        }
       }
       if(typeof(options.geometry) != 'undefined'){
         this.geometry = options.geometry;
@@ -47,17 +59,50 @@ class Drawable {
       if(typeof(options.root) != 'undefined'){
         this.root = options.root;
       }
+      if(typeof(options.children) != 'undefined'){
+        this.children = options.children;
+        for(let i = 0; i < this.children.length; i++){
+          this.children[i].root = this.root;
+        }
+      }
+      this.setStyleDefaults();
     }
   }
 
   // Sets style by key
   setStyle(style){
-    this.style = this.styles[style];
+    if(typeof(this.styles[style])!= 'undefined'){
+      this.style = this.styles[style];
+    }
+    if(this.children.length > 0){
+      for(let i = 0; i < this.children.length; i++){
+        this.children[i].setStyle(style);
+      }
+    }
+  }
+
+  setStyleDefaults(){
+    if(typeof(this.styles.default) != 'undefined'){
+      this.setStyle('default');
+    }
   }
 
   // Useful for getting the prototypical geometry for this type
   getGeometry(){
     return JSON.parse(JSON.stringify(this.geometry))
+  }
+
+  addChild(drawable){
+    drawable.root = this.root;
+    this.children.push(drawable);
+  }
+
+  drawChildren(){
+    if(this.children.length > 0){
+      for(let i = 0; i < this.children.length; i++){
+        this.children[i].draw();
+      }
+    }
   }
 
   // The parent class method should always be called

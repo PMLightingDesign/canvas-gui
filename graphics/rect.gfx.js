@@ -15,6 +15,7 @@ const Drawable = require('./drawable.gfx.js');
 class Rectangle extends Drawable {
   constructor(ctx, options){
     super(ctx, options);
+    this.type = "rect";
   }
 
   getCurrentGeometry(){

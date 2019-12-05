@@ -18,9 +18,7 @@ global.GLOAL_WINDOW_OPTS = { title: '',
 // Load the library
 require('native-canvas');
 
-const Line = require('./line.gfx.js');
-const Rect = require('./rect.gfx.js');
-const Button = require('./button.gfx.js');
+const Interface = require('./interface.js');
 
 // Title the title attribute
 document.title = 'Test for Drawables';
@@ -29,50 +27,35 @@ document.title = 'Test for Drawables';
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext("2d");
 
-let lineOpts = {
-  styles: {
-    default: {
-      strokeStyle: '#000000',
-      weight: 5
-    }
-  },
+let interface = new Interface(ctx, { root: { x: 0, y: 0 }});
+
+interface.addLine({
   geometry: {
-    x: 0, y: 0, x1: 50, y1: 50
+    x: 0, y: 0,
+    x1: 100, y1: 100
   }
-}
-
-let line = new Line(ctx, lineOpts);
-let line2 = new Line(ctx, lineOpts);
-line2.geometry = {
-  x: 0, y: 50, x1: 50, y1: 0
-}
-
-let button = new Button(ctx, () => {
-  process.exit(0)
-}, {
-  styles: {
-    default: {
-      strokeStyle: '#000',
-      fillStyle: '#F00',
-      weight: 5
-    }
-  },
-  geometry: {
-    x: 0, y: 0, width: 50, height: 50
-  },
-  root: {
-    x: 50, y: 50
-  },
-  text: "Test!",
-  children: [line, line2]
 });
 
-button.setStyle('default');
-button.draw();
+interface.addRect({
+  geometry: {
+    x: 100, y: 100,
+    width: 50, height: 50
+  }
+});
+
+interface.addButton({
+  geometry: {
+    x: 200, y: 100,
+    width: 50, height: 50
+  }, text: "Test!"
+});
+
+
+interface.draw();
 
 canvas.addEventListener('click', (evt) => {
   let clickPoint = {
     x: evt.clientX, y: evt.clientY
   }
-  button.test(clickPoint);
+  interface.test(clickPoint);
 });
