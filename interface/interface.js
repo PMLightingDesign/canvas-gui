@@ -30,7 +30,7 @@ class Interface extends EventEmmiter {
     } else {
       this.styles = {
         default: {
-          strokeStyle: '#000',
+          strokeStyle: '#888',
           fillStyle: '#FFF',
           weight: 1
         }
@@ -93,7 +93,8 @@ class Interface extends EventEmmiter {
   addButton(options){
     options = this.addRoot(options);
     let button = new Button(this.ctx, () => {
-      console.log("Clicked");
+      console.log(`${button.ID} clicked`);
+      button.clickedStyle();
     }, options);
     this.children.push(button);
     button.ID = this.newID(options, 'button');
@@ -122,17 +123,48 @@ class Interface extends EventEmmiter {
   }
 
   test(pos){
-    console.log(this.buttons);
+    console.log(pos);
     for(let button in this.buttons){
-      if(button.test(pos)){
-        self.emit('button', button.ID);
+      if(button != '_count' && this.buttons[button].test(pos)){
+        this.emit('button', this.buttons[button].ID);
       }
     }
     for(let slider in this.sliders){
-      if(slider.test(pos)){
-        self.emit('slider', slider.ID);
+      if(typeof(slider.test) != 'undefined' && slider.test(pos)){
+        this.emit('slider', slider.ID);
       }
     }
+  }
+
+  startClick(evt){
+    this.clickRunning = true;
+    setTimeout(() => {
+      if(!this.clickRunning){
+        let clickPoint = {
+          x: evt.clientX, y: evt.clientY
+        }
+        this.test(clickPoint);
+      } else {
+        this.mousePositionUpdater = setInterval(() => {
+          console.log(this.mousePos);
+        }, 25);
+      }
+    }, 150);
+  }
+
+  registerEventListeners(canvas){
+    canvas.addEventListener('mousedown', (evt) => {
+      this.startClick(evt);
+    });
+    canvas.addEventListener('mouseup', (evt) => {
+      this.clickRunning = false;
+      clearInterval(this.mousePositionUpdater);
+    });
+    canvas.addEventListener('mousemove', (evt) => {
+      this.mousePos = {
+        x: evt.clientX, y: evt.clientY
+      }
+    });
   }
 
   draw(){

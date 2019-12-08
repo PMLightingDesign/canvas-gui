@@ -15,15 +15,26 @@ class Button extends Rectangle {
     }
   }
 
+  clickedStyle(){
+    if(typeof(this.styles['clicked']) != 'undefined'){
+      this.setStyle('clicked');
+      setTimeout(() => {
+        this.setStyle('default');
+      }, 150);
+    }
+  }
+
   test(pos){
     let buttonPos = this.getCurrentGeometry();
     if(pos.x > buttonPos.x && pos.x < buttonPos.x1){
       if(pos.y > buttonPos.y && pos.y < buttonPos.y1){
         if(this.enabled && this.visible){
-          this.callback(this);
+          this.callback();
+          return true;
         }
       }
     }
+    return false;
   }
 
   draw(){

@@ -50,12 +50,16 @@ interface.addButton({
   }, text: "Test!"
 });
 
-
-interface.draw();
-
-canvas.addEventListener('click', (evt) => {
-  let clickPoint = {
-    x: evt.clientX, y: evt.clientY
-  }
-  interface.test(clickPoint);
+interface.registerEventListeners(canvas);
+interface.on('button', (id) => {
+  console.log(id);
 });
+interface.addStyle('clicked', {
+  strokeStyle: '#000',
+  fillStyle: '#888',
+  weight: 1
+});
+
+setInterval(() => {
+  interface.draw();
+}, 30);
