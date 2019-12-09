@@ -17,6 +17,7 @@ class Drawable {
     this.style = {
       fillStyle: '#000000',
       strokeStyle: '#FFFFFF',
+      textColor: "#888",
       weight: '1px'
     }
     // This object will hold all of the possible styles
@@ -67,6 +68,11 @@ class Drawable {
       }
       this.setStyleDefaults();
     }
+  }
+
+  translateRoot(pos){
+    this.root.x += pos.x;
+    this.root.y += pos.y;
   }
 
   // Sets style by key

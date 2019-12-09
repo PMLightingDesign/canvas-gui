@@ -1,6 +1,7 @@
 const Line = require('../graphics/line.gfx.js');
 const Rect = require('../graphics/rect.gfx.js');
 const Button = require('../graphics/button.gfx.js');
+const Slider = require('../graphics/slider.gfx.js');
 const EventEmmiter = require('events');
 
 class Interface extends EventEmmiter {
@@ -30,8 +31,8 @@ class Interface extends EventEmmiter {
     } else {
       this.styles = {
         default: {
-          strokeStyle: '#888',
-          fillStyle: '#FFF',
+          strokeStyle: '#586e75',
+          fillStyle: '#657b83',
           weight: 1
         }
       }
@@ -42,6 +43,14 @@ class Interface extends EventEmmiter {
       this.root = { x: 0, y: 0 };
     }
     console.log(this);
+  }
+
+  translateRoot(pos){
+    this.root.x += pos.x;
+    this.root.y += pos.y;
+    for(let i = 0; i < this.children.length; i++){
+      this.children[i].translateRoot(pos);
+    }
   }
 
   newID(options, type){
@@ -103,7 +112,9 @@ class Interface extends EventEmmiter {
 
   addSlider(options){
     options = this.addRoot(options);
-    let slider = new Slider(this.ctx, options);
+    let slider = new Slider(this.ctx, () => {
+      console.log("Useless doot");
+    },options);
     this.children.push(slider);
     slider.ID = this.newID(options, 'slider');
     this.sliders[slider.ID] = slider;
@@ -123,15 +134,22 @@ class Interface extends EventEmmiter {
   }
 
   test(pos){
-    console.log(pos);
     for(let button in this.buttons){
       if(button != '_count' && this.buttons[button].test(pos)){
         this.emit('button', this.buttons[button].ID);
       }
     }
+  }
+
+  testSlider(pos){
     for(let slider in this.sliders){
-      if(typeof(slider.test) != 'undefined' && slider.test(pos)){
-        this.emit('slider', slider.ID);
+      if(slider != '_count'){
+        if(this.sliders[slider].test(pos)){
+          this.emit('slider', {
+            id: this.sliders[slider].ID,
+            val: this.sliders[slider].val
+          });
+        }
       }
     }
   }
@@ -146,7 +164,7 @@ class Interface extends EventEmmiter {
         this.test(clickPoint);
       } else {
         this.mousePositionUpdater = setInterval(() => {
-          console.log(this.mousePos);
+          this.testSlider(this.mousePos);
         }, 25);
       }
     }, 150);
@@ -164,6 +182,9 @@ class Interface extends EventEmmiter {
       this.mousePos = {
         x: evt.clientX, y: evt.clientY
       }
+    });
+    canvas.addEventListener('wheel', (evt) => {
+      console.log(evt);
     });
   }
 

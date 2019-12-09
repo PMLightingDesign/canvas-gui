@@ -41,11 +41,11 @@ class Button extends Rectangle {
     super.draw();
     this.drawChildren();
     if(this.text != ''){
-      let cx = this.geometry.x + this.root.x + (this.geometry.height / 2);
+      let cx = this.geometry.x + this.root.x + (this.geometry.width / 2);
       let cy = this.geometry.y + this.root.y + (this.geometry.height / 2) + 5;
       this.ctx.moveTo(cx, cy);
       this.ctx.textAlign = "center"
-      this.ctx.fillStyle = '#fff';
+      this.ctx.fillStyle = this.style.textColor;
       this.ctx.fillText(this.text, cx, cy);
     }
   }

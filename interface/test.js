@@ -27,39 +27,81 @@ document.title = 'Test for Drawables';
 const canvas = document.createElement('canvas');
 const ctx = canvas.getContext("2d");
 
-let interface = new Interface(ctx, { root: { x: 0, y: 0 }});
+let styles = {
+  default: {
+    strokeStyle: '#073642',
+    fillStyle: '#93a1a1',
+    textColor: '#fdf6e3',
+    weight: 1
+  }, clicked: {
+    strokeStyle: '#073642',
+    fillStyle: '#fdf6e3',
+    textColor: '#073642',
+    weight: 2
+  }
+}
+
+let style = {
+  strokeStyle: '#073642',
+  fillStyle: '#93a1a1',
+  weight: 1
+}
+
+let interface = new Interface(ctx, {
+  style: style,
+  styles: styles,
+  root: { x: 0, y: 0 }
+});
 
 interface.addLine({
   geometry: {
     x: 0, y: 0,
     x1: 100, y1: 100
-  }
+  }, style: style, styles: styles
 });
 
 interface.addRect({
   geometry: {
     x: 100, y: 100,
     width: 50, height: 50
-  }
+  }, style: style, styles: styles
 });
 
 interface.addButton({
   geometry: {
     x: 200, y: 100,
     width: 50, height: 50
-  }, text: "Test!"
+  }, text: "Test!",
+  style: style, styles: styles
+});
+
+interface.addSlider({
+  geometry: {
+    x: 300, y: 100,
+    width: 50, height: 200
+  }, text: "Test!",
+  style: style, styles: styles,
+  prefix: "%",
+  max: 1,
+  min: 0,
+  val: 0.5,
+  text: 'Zone 1'
 });
 
 interface.registerEventListeners(canvas);
 interface.on('button', (id) => {
-  console.log(id);
+  if(id == 'button_1'){
+    console.log('doot');
+    interface.translateRoot({x: 5, y: 0});
+  }
 });
-interface.addStyle('clicked', {
-  strokeStyle: '#000',
-  fillStyle: '#888',
-  weight: 1
+interface.on('slider', (info) => {
+  console.log(info);
 });
+interface.setStyle('default');
 
 setInterval(() => {
+  ctx.fillStyle = '#002b36'
+  ctx.fillRect(0,0, canvas.width, canvas.height);
   interface.draw();
 }, 30);
